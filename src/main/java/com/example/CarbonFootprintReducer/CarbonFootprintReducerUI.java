@@ -1,12 +1,16 @@
 package com.example.CarbonFootprintReducer;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 public class CarbonFootprintReducerUI extends JFrame {
 
-    private JTextArea textArea;
+    private JTextPane textPane;
+    private StyledDocument doc;
+    private Style regular, bold, error;
 
     public CarbonFootprintReducerUI() {
         setTitle("Carbon Footprint Reducer");
@@ -19,7 +23,7 @@ public class CarbonFootprintReducerUI extends JFrame {
         add(title, BorderLayout.NORTH);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(6, 1, 10, 10));
+        buttonPanel.setLayout(new GridLayout(7, 1, 10, 10));
 
         JButton compressImagesBtn = new JButton("1. Compress all images (jpg)");
         JButton deleteByCityBtn = new JButton("2. Delete images by City");
@@ -37,27 +41,38 @@ public class CarbonFootprintReducerUI extends JFrame {
         buttonPanel.add(clearBtn);
         buttonPanel.add(exitBtn);
 
-
         add(buttonPanel, BorderLayout.WEST);
 
-        // Output area
-        JTextArea outputArea = new JTextArea();
-        outputArea.setEditable(false);
-        JScrollPane scroll = new JScrollPane(outputArea);
+        // ✅ Use JTextPane instead of JTextArea
+        textPane = new JTextPane();
+        textPane.setEditable(false);
+        doc = textPane.getStyledDocument();
+
+        // Styles
+        regular = textPane.addStyle("regular", null);
+        StyleConstants.setFontFamily(regular, "Monospaced");
+        StyleConstants.setFontSize(regular, 14);
+
+        bold = textPane.addStyle("bold", null);
+        StyleConstants.setFontFamily(bold, "Monospaced");
+        StyleConstants.setFontSize(bold, 14);
+        StyleConstants.setBold(bold, true);
+
+        error = textPane.addStyle("error", null);
+        StyleConstants.setFontFamily(error, "Monospaced");
+        StyleConstants.setFontSize(error, 14);
+        StyleConstants.setForeground(error, Color.RED);
+
+        JScrollPane scroll = new JScrollPane(textPane);
         add(scroll, BorderLayout.CENTER);
 
-        // ✅ Redirect System.out and System.err
-        System.setOut(new java.io.PrintStream(new TextAreaOutputStream(outputArea), true));
-        System.setErr(new java.io.PrintStream(new TextAreaOutputStream(outputArea), true));
-        //System.setOut(new PrintStream(new TextAreaOutputStream(outputArea), true));
-        //System.setErr(new PrintStream(new TextAreaOutputStream(outputArea), true));
+        // Redirect System.out & System.err
+        System.setOut(new PrintStream(new TextPaneOutputStream(doc, regular, bold), true));
+        System.setErr(new PrintStream(new TextPaneOutputStream(doc, error, error), true));
 
-
-        compressImagesBtn.addActionListener(e -> {
-            new Thread(() -> {
-                CarbonFootprintReducer.compressAllImages("Pictures/");
-            }).start();
-        });
+        // Buttons
+        compressImagesBtn.addActionListener(e -> new Thread(() ->
+                CarbonFootprintReducer.compressAllImages("Pictures/")).start());
 
         deleteByCityBtn.addActionListener(e -> {
             String city = JOptionPane.showInputDialog(this, "Enter City Name:");
@@ -85,15 +100,13 @@ public class CarbonFootprintReducerUI extends JFrame {
             }
         });
 
-        compressVideosBtn.addActionListener(e -> {
-            new Thread(() -> {
-                try {
-                    CarbonFootprintReducer.compressAllVideos("Videos/");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }).start();
-        });
+        compressVideosBtn.addActionListener(e -> new Thread(() -> {
+            try {
+                CarbonFootprintReducer.compressAllVideos("Videos/");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }).start());
 
         deleteByYearBtn.addActionListener(e -> {
             String yearStr = JOptionPane.showInputDialog(this, "Enter Year (e.g. 2022):");
@@ -105,28 +118,60 @@ public class CarbonFootprintReducerUI extends JFrame {
             }
         });
 
-
-        clearBtn.addActionListener(e -> outputArea.setText(""));
-
-
+        clearBtn.addActionListener(e -> textPane.setText(""));
         exitBtn.addActionListener(e -> System.exit(0));
     }
 
-
     public static void main(String[] args) {
-
-        //SwingUtilities.invokeLater(CarbonFootprintReducerUI::new);
-
         SwingUtilities.invokeLater(() -> {
             CarbonFootprintReducerUI ui = new CarbonFootprintReducerUI();
             ui.setVisible(true);
         });
+    }
+}
 
+/**
+ * Custom OutputStream for JTextPane with styled text.
+ */
+class TextPaneOutputStream extends OutputStream {
+    private final StyledDocument doc;
+    private final Style regular;
+    private final Style bold;
+    private final StringBuilder buffer = new StringBuilder();
 
+    public TextPaneOutputStream(StyledDocument doc, Style regular, Style bold) {
+        this.doc = doc;
+        this.regular = regular;
+        this.bold = bold;
     }
 
+    @Override
+    public void write(int b) {
+        char c = (char) b;
+        buffer.append(c);
+        if (c == '\n') {
+            flush();
+        }
+    }
 
+    @Override
+    public void flush() {
+        if (buffer.length() > 0) {
+            final String line = buffer.toString();
+            buffer.setLength(0);
 
-
-
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    // Lines starting with "BOLD:" → bold text
+                    if (line.contains("arbon footprint")) {
+                        doc.insertString(doc.getLength(), line, bold);
+                    } else {
+                        doc.insertString(doc.getLength(), line, regular);
+                    }
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
 }
