@@ -161,8 +161,8 @@ public class CarbonFootprintReducer {
                 System.out.println("Deleted " + deletedCount + " files created before " + year + ".");
                 double sizeInMB = (double) size / (1024 * 1024);
                 System.out.printf("Total space freed : %.2f MB%n", sizeInMB);
-                System.out.println("Carbon footprint saved 0.10 g CO2 per MB");
-                System.out.println("Total carbon footprint saved " + sizeInMB*0.10 + " g");
+                System.out.println("Carbon footprint saved 0.05 g CO2 per MB");
+                System.out.println("Total carbon footprint saved " + sizeInMB*0.05 + " g");
     }
     public static void compressAllImages(String folderPath) {
         File folder = new File(folderPath);
@@ -234,8 +234,8 @@ public class CarbonFootprintReducer {
         double compressionPercentage = calculateCompressionPercentage(sizeInMB, sizeInMB2);
         System.out.printf("Compression achieved: %.4f%%%n", compressionPercentage);
         System.out.printf("Space saved : %.2f MB%n", saved);
-        System.out.println("Carbon footprint saved 0.10 g CO2 per MB");
-        System.out.println("Total carbon footprint saved " + saved * 0.10 + " g");
+        System.out.println("Carbon footprint saved 0.05 g CO2 per MB");
+        System.out.println("Total carbon footprint saved " + saved * 0.05 + " g");
     }
     public static double calculateCompressionPercentage(double inputSize, double outputSize) {
         if (inputSize <= 0) {
@@ -282,8 +282,8 @@ public static void deleteImagesByCity(String city, String folderPath) throws Ima
     }
     double sizeInMB = (double) size / (1024 * 1024);
     System.out.printf("Total space freed : %.2f MB%n", sizeInMB);
-    System.out.println("Carbon footprint saved 0.10 g CO2 per MB");
-    System.out.println("Total carbon footprint saved " + sizeInMB*0.10 + " g");
+    System.out.println("Carbon footprint saved 0.05 g CO2 per MB");
+    System.out.println("Total carbon footprint saved " + sizeInMB*0.05 + " g");
 }
 
     public static void deleteImagesByCountry(String country, String folderPath) throws ImageProcessingException, IOException {
@@ -326,8 +326,8 @@ public static void deleteImagesByCity(String city, String folderPath) throws Ima
         }
         double sizeInMB = (double) size / (1024 * 1024);
         System.out.printf("Total space freed : %.2f MB%n", sizeInMB);
-        System.out.println("Carbon footprint saved 0.10 g CO2 per MB");
-        System.out.println("Total carbon footprint saved " + sizeInMB*0.10 + " g");
+        System.out.println("Carbon footprint saved 0.05 g CO2 per MB");
+        System.out.println("Total carbon footprint saved " + sizeInMB*0.05 + " g");
 
     }
     private static String getCityFromCoordinates(double lat, double lng) {
@@ -521,7 +521,7 @@ public static void deleteImagesByCity(String city, String folderPath) throws Ima
         double compressionPercentage = calculateCompressionPercentage(sizeInMB, sizeInMB2);
         System.out.printf("Compression achieved: %.4f%%%n", compressionPercentage);
         System.out.printf("Space saved : %.2f MB%n", saved);
-        System.out.println("Carbon footprint saved 0.10 g CO2 per MB");
-        System.out.println("Total carbon footprint saved " + saved * 0.10 + " g");
+        System.out.println("Carbon footprint saved 0.05 g CO2 per MB");
+        System.out.println("Total carbon footprint saved " + saved * 0.05 + " g");
     }
 }
