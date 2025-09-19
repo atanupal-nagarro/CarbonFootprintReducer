@@ -1,5 +1,6 @@
 This Java Swing application created by EcoVision Team enables you to reduce carbon footprint by compression or deletion based on different factors:
 
+
 1. Compress all images (JPG) and delete the original
 The program makes the pictures smaller (1024x768 resolution) and compresses it and then removes the bigger, old ones.
 This saves storage and reduces carbon footprint.
