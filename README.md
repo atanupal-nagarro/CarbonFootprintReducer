@@ -1,19 +1,19 @@
-This Java Swing application created by EcoVision Team enables you to reduce carbon footprint:  
+This Java Swing application created by EcoVision Team enables you to reduce carbon footprint by compression or deletion based on different factors:
 
-Compress all images (JPG) and delete the original
-The program makes the pictures smaller (uses less space) and then removes the bigger, old ones.
+1. Compress all images (JPG) and delete the original
+The program makes the pictures smaller (1024x768 resolution) and compresses it and then removes the bigger, old ones.
 This saves storage and reduces carbon footprint.
 
-Delete all images of a specific city
+2. Delete all images of a specific city
 If you give the name of a city, the program looks at the photo’s GPS location and deletes only those pictures taken in that city.
 
-Delete all images of a specific country
+3. Delete all images of a specific country
 Similar to the city option, but works at the country level.
 
-Compress all videos and delete the original
+4. Compress all videos and delete the original
 Videos are made smaller (using FFmpeg) and the old large ones are deleted.
 
-Delete all picture files older than a specific year
+5. Delete all picture files older than a specific year
 You enter a year (e.g., 2018).
 The program deletes all photos taken before that year.
 
@@ -23,8 +23,6 @@ The program stops running.
 Note:
 All pictures are stored in a folder called Pictures present at the application root.
 All videos are stored in a folder called Videos present at the application root.
-
-
 - Fetch the **city name** from GPS coordinates (using the [OpenCage API](https://opencagedata.com/)).  
 - Track **carbon footprint savings** (in grams of CO₂ per MB) when compressing or deleting media files.  
 - Log all outputs (`System.out.println`) directly into the **UI** instead of console.  
@@ -58,9 +56,10 @@ All videos are stored in a folder called Videos present at the application root.
 
 ### 1. Prerequisites
 - Install **Java JDK 11 or later**   
+- Maven to be installed
 
 ### 2. Clone 
-```bash
+```
 git clone https://github.com/atanupal-nagarro/CarbonFootprintReducer.git
 cd CarbonFootprintReducer
 ```
@@ -83,11 +82,11 @@ mvn exec:java -Dexec.mainClass="com.example.CarbonFootprintReducer.CarbonFootpri
    - Console logs are redirected (`System.setOut`) so `System.out.println` appears in the UI.
 
 2. **GPS to City Conversion**
-   - `GPSCityFinder` queries OpenCage API using latitude & longitude.  
-   - JSON response parsed → extracts `"city"` or `"town"` field.
+   - `CarbonFootprintReducer` queries OpenCage API using latitude & longitude.  
+   - JSON response parsed → extracts `"city"` or `"Country"` field.
 
 3. **Carbon Footprint Calculation**
-   - Formula: **0.06 g CO₂ per MB saved** (The Shift Project, 2019).  
+   - Formula: **0.05 g CO₂ per MB saved** (The Shift Project, 2019).  
    - Compression/deletion calculates `(originalSize - newSize) / 1,000,000 * 0.06`.
 
 4. **Video Compression**
