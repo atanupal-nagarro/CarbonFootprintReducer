@@ -114,7 +114,7 @@ public class CarbonFootprintReducerUI extends JFrame {
                 int year = Integer.parseInt(yearStr);
                 new Thread(() -> CarbonFootprintReducer.deleteFilesOlderThanYear("Pictures/", year)).start();
             } catch (NumberFormatException ex) {
-                System.err.println("❌ Invalid year entered.");
+                System.err.println("Invalid year entered.");
             }
         });
 
