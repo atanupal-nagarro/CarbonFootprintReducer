@@ -419,9 +419,9 @@ public static void deleteImagesByCity(String city, String folderPath) throws Ima
                     if (gpsInfo != null) {
                         double lat = gpsInfo.getLatitudeAsDegreesNorth();
                         double lon = gpsInfo.getLongitudeAsDegreesEast();
-                        //System.out.println("GPS found: " + lat + ", " + lon);
+                        System.out.println("GPS found: " + lat + ", " + lon);
                     } else {
-                        //System.out.println("⚠️ Original image has no GPS info.");
+                        System.out.println("Original image has no GPS info.");
                     }
 
                     // Now re-write EXIF into compressed file
@@ -430,13 +430,13 @@ public static void deleteImagesByCity(String city, String folderPath) throws Ima
                         new ExifRewriter().updateExifMetadataLossless(imageBytes, fos, outputSet);
                     }
                 } else {
-                    //System.out.println("⚠️ Original image has EXIF but no GPS.");
+                    System.out.println("Original image has EXIF but no GPS.");
                 }
             } else {
-                //System.out.println("⚠️ No EXIF metadata in original image.");
+                System.out.println("No EXIF metadata in original image.");
             }
         } catch (Exception e) {
-            //System.out.println("Failed to copy EXIF/GPS: " + e.getMessage());
+            System.out.println("Failed to copy EXIF/GPS: " + e.getMessage());
         }
     }
     public static void compressAllVideos(String folderPath) throws IOException {
